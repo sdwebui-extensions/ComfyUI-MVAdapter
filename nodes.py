@@ -55,6 +55,8 @@ class DiffusersPipelineLoader:
     CATEGORY = "Diffusers"
 
     def create_pipeline(self, ckpt_name, pipeline_name):
+        if os.path.exists('/stable-diffusion-cache/models/stable-diffusion-xl-base-1.0'):
+            ckpt_name = '/stable-diffusion-cache/models/stable-diffusion-xl-base-1.0'
         pipeline_class = PIPELINES[pipeline_name]
         pipe = pipeline_class.from_pretrained(
             pretrained_model_name_or_path=ckpt_name,
@@ -126,6 +128,8 @@ class DiffusersVaeLoader:
     CATEGORY = "Diffusers"
 
     def create_pipeline(self, vae_name):
+        if os.path.exists("/stable-diffusion-cache/models/sdxl-vae-fp16-fix"):
+            vae_name = "/stable-diffusion-cache/models/sdxl-vae-fp16-fix"
         vae = AutoencoderKL.from_pretrained(
             pretrained_model_name_or_path=vae_name,
             torch_dtype=self.dtype,
@@ -252,6 +256,8 @@ class DiffusersModelMakeup:
     ):
         pipeline.vae = autoencoder
         pipeline.scheduler = scheduler
+        if os.path.exists("/stable-diffusion-cache/models/mv-adapter"):
+            adapter_path = "/stable-diffusion-cache/models/mv-adapter"
 
         if load_mvadapter:
             pipeline.init_custom_adapter(num_views=num_views)
@@ -451,6 +457,8 @@ class BiRefNet:
         return image
 
     def load_model_fn(self, ckpt_name):
+        if os.path.exists("/stable-diffusion-cache/models/BiRefNet"):
+            ckpt_name = "/stable-diffusion-cache/models/BiRefNet"
         model = AutoModelForImageSegmentation.from_pretrained(
             ckpt_name, trust_remote_code=True, cache_dir=self.hf_dir
         ).to(self.torch_device, self.dtype)
