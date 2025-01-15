@@ -34,6 +34,8 @@ from diffusers import (
 
 from .mvadapter.pipelines.pipeline_mvadapter_t2mv_sdxl import MVAdapterT2MVSDXLPipeline
 from .mvadapter.pipelines.pipeline_mvadapter_i2mv_sdxl import MVAdapterI2MVSDXLPipeline
+from .mvadapter.pipelines.pipeline_mvadapter_i2mv_sd import MVAdapterI2MVSDPipeline
+from .mvadapter.pipelines.pipeline_mvadapter_t2mv_sd import MVAdapterT2MVSDPipeline
 from .mvadapter.utils import (
     get_orthogonal_camera,
     get_plucker_embeds_from_cameras_ortho,
@@ -47,6 +49,8 @@ PIPELINES = {
     "StableDiffusionXLPipeline": StableDiffusionXLPipeline,
     "MVAdapterT2MVSDXLPipeline": MVAdapterT2MVSDXLPipeline,
     "MVAdapterI2MVSDXLPipeline": MVAdapterI2MVSDXLPipeline,
+    "MVAdapterI2MVSDPipeline": MVAdapterI2MVSDPipeline,
+    "MVAdapterT2MVSDPipeline": MVAdapterT2MVSDPipeline,
 }
 
 SCHEDULERS = {
@@ -67,6 +71,9 @@ SCHEDULERS = {
 MVADAPTERS = [
     "mvadapter_t2mv_sdxl.safetensors",
     "mvadapter_i2mv_sdxl.safetensors",
+    "mvadapter_i2mv_sdxl_beta.safetensors",
+    "mvadapter_t2mv_sd21.safetensors",
+    "mvadapter_i2mv_sd21.safetensors",
 ]
 
 
@@ -294,15 +301,15 @@ def resize_images(images: list[Image.Image], size: tuple[int, int]):
     return [image.resize(size) for image in images]
 
 
-def prepare_camera_embed(num_views, size, device):
+def prepare_camera_embed(num_views, size, device, azimuth_degrees=None):
     cameras = get_orthogonal_camera(
-        elevation_deg=[0, 0, 0, 0, 0, 0],
+        elevation_deg=[0] * num_views,
         distance=[1.8] * num_views,
         left=-0.55,
         right=0.55,
         bottom=-0.55,
         top=0.55,
-        azimuth_deg=[x - 90 for x in [0, 45, 90, 180, 270, 315]],
+        azimuth_deg=[x - 90 for x in azimuth_degrees],
         device=device,
     )
 

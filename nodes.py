@@ -52,7 +52,7 @@ class DiffusersPipelineLoader:
 
     FUNCTION = "create_pipeline"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def create_pipeline(self, ckpt_name, pipeline_name):
         pipeline_class = PIPELINES[pipeline_name]
@@ -89,7 +89,7 @@ class LdmPipelineLoader:
 
     FUNCTION = "create_pipeline"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def create_pipeline(self, ckpt_name, pipeline_name):
         pipeline_class = PIPELINES[pipeline_name]
@@ -125,7 +125,7 @@ class DiffusersVaeLoader:
 
     FUNCTION = "create_pipeline"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def create_pipeline(self, vae_name):
         vae = AutoencoderKL.from_pretrained(
@@ -154,7 +154,7 @@ class LdmVaeLoader:
 
     FUNCTION = "create_pipeline"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def create_pipeline(self, vae_name, upcast_fp32):
         vae = vae_pt_to_vae_diffuser(
@@ -191,7 +191,7 @@ class DiffusersSchedulerLoader:
 
     FUNCTION = "load_scheduler"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def load_scheduler(
         self, pipeline, scheduler_name, shift_snr, shift_mode, shift_scale
@@ -228,7 +228,7 @@ class LoraModelLoader:
 
     RETURN_TYPES = ("PIPELINE",)
     FUNCTION = "load_lora"
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def load_lora(self, pipeline, lora_name, strength_model):
         if strength_model == 0:
@@ -279,7 +279,7 @@ class ControlNetModelLoader:
 
     RETURN_TYPES = ("PIPELINE",)
     FUNCTION = "load_controlnet"
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def load_controlnet(self, pipeline, controlnet_name):
         controlnet = None
@@ -334,7 +334,7 @@ class DiffusersModelMakeup:
 
     FUNCTION = "makeup_pipeline"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def makeup_pipeline(
         self,
@@ -409,7 +409,7 @@ class DiffusersSampler:
 
     FUNCTION = "sample"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def sample(
         self,
@@ -474,6 +474,7 @@ class DiffusersMVSampler:
                 "reference_image": ("IMAGE",),
                 "controlnet_image": ("IMAGE",),
                 "controlnet_conditioning_scale": ("FLOAT", {"default": 1.0}),
+                "azimuth_degrees": ("LIST", {"default": [0, 45, 90, 180, 270, 315]}),
             },
         }
 
@@ -481,7 +482,7 @@ class DiffusersMVSampler:
 
     FUNCTION = "sample"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     def sample(
         self,
@@ -497,8 +498,12 @@ class DiffusersMVSampler:
         reference_image=None,
         controlnet_image=None,
         controlnet_conditioning_scale=1.0,
+        azimuth_degrees=[0, 45, 90, 180, 270, 315],
     ):
-        control_images = prepare_camera_embed(num_views, width, self.torch_device)
+        num_views = len(azimuth_degrees)
+        control_images = prepare_camera_embed(
+            num_views, width, self.torch_device, azimuth_degrees
+        )
 
         pipe_kwargs = {}
         if reference_image is not None:
@@ -528,6 +533,7 @@ class DiffusersMVSampler:
             control_conditioning_scale=1.0,
             negative_prompt=negative_prompt,
             generator=torch.Generator(self.torch_device).manual_seed(seed),
+            cross_attention_kwargs={"num_views": num_views},
             **pipe_kwargs,
         ).images
         return (convert_images_to_tensors(images),)
@@ -543,7 +549,7 @@ class BiRefNet:
 
     FUNCTION = "load_model_fn"
 
-    CATEGORY = "Diffusers"
+    CATEGORY = "MV-Adapter"
 
     @classmethod
     def INPUT_TYPES(s):
@@ -660,6 +666,53 @@ class ControlImagePreprocessor:
         return (convert_images_to_tensors(images),)
 
 
+class ViewSelector:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "front_view": ("BOOLEAN", {"default": True}),
+                "front_right_view": ("BOOLEAN", {"default": True}),
+                "right_view": ("BOOLEAN", {"default": True}),
+                "back_view": ("BOOLEAN", {"default": True}),
+                "left_view": ("BOOLEAN", {"default": True}),
+                "front_left_view": ("BOOLEAN", {"default": True}),
+            }
+        }
+
+    RETURN_TYPES = ("LIST",)
+    FUNCTION = "process"
+    CATEGORY = "MV-Adapter"
+
+    def process(
+        self,
+        front_view,
+        front_right_view,
+        right_view,
+        back_view,
+        left_view,
+        front_left_view,
+    ):
+        azimuth_deg = []
+        if front_view:
+            azimuth_deg.append(0)
+        if front_right_view:
+            azimuth_deg.append(45)
+        if right_view:
+            azimuth_deg.append(90)
+        if back_view:
+            azimuth_deg.append(180)
+        if left_view:
+            azimuth_deg.append(270)
+        if front_left_view:
+            azimuth_deg.append(315)
+
+        return (azimuth_deg,)
+
+
 NODE_CLASS_MAPPINGS = {
     "LdmPipelineLoader": LdmPipelineLoader,
     "LdmVaeLoader": LdmVaeLoader,
@@ -674,6 +727,7 @@ NODE_CLASS_MAPPINGS = {
     "ImagePreprocessor": ImagePreprocessor,
     "ControlNetModelLoader": ControlNetModelLoader,
     "ControlImagePreprocessor": ControlImagePreprocessor,
+    "ViewSelector": ViewSelector,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -690,4 +744,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "ImagePreprocessor": "Image Preprocessor",
     "ControlNetModelLoader": "ControlNet Model Loader",
     "ControlImagePreprocessor": "Control Image Preprocessor",
+    "ViewSelector": "View Selector",
 }
