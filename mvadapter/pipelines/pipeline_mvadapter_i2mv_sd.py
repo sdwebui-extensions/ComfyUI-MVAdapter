@@ -516,7 +516,7 @@ class MVAdapterI2MVSDPipeline(StableDiffusionPipeline, CustomAdapterMixin):
 
         cross_attention_kwargs = {
             "mv_scale": mv_scale,
-            "ref_hidden_states": {k: v.clone() for k, v in ref_hidden_states.items()},
+            "ref_hidden_states": ref_hidden_states,
             "ref_scale": reference_conditioning_scale,
             **(self.cross_attention_kwargs or {}),
         }
