@@ -1,6 +1,6 @@
 {
-    "last_node_id": 11,
-    "last_link_id": 10,
+    "last_node_id": 12,
+    "last_link_id": 12,
     "nodes": [
         {
             "id": 3,
@@ -11,7 +11,7 @@
             ],
             "size": [
                 315,
-                58
+                82
             ],
             "flags": {},
             "order": 0,
@@ -33,57 +33,6 @@
             "widgets_values": [
                 "sdxl_vae.safetensors",
                 true
-            ]
-        },
-        {
-            "id": 4,
-            "type": "DiffusersModelMakeup",
-            "pos": [
-                873.04052734375,
-                378.09552001953125
-            ],
-            "size": [
-                315,
-                170
-            ],
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "pipeline",
-                    "type": "PIPELINE",
-                    "link": 2
-                },
-                {
-                    "name": "scheduler",
-                    "type": "SCHEDULER",
-                    "link": 3
-                },
-                {
-                    "name": "autoencoder",
-                    "type": "AUTOENCODER",
-                    "link": 4
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "PIPELINE",
-                    "type": "PIPELINE",
-                    "links": [
-                        5
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "Node name for S&R": "DiffusersModelMakeup"
-            },
-            "widgets_values": [
-                true,
-                "huanngzh/mv-adapter",
-                "mvadapter_i2mv_sdxl.safetensors",
-                6
             ]
         },
         {
@@ -287,11 +236,38 @@
             ]
         },
         {
+            "id": 11,
+            "type": "PreviewImage",
+            "pos": [
+                1987.6944580078125,
+                -87.29558563232422
+            ],
+            "size": [
+                390.2191162109375,
+                614.5867919921875
+            ],
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "images",
+                    "type": "IMAGE",
+                    "link": 10
+                }
+            ],
+            "outputs": [],
+            "properties": {
+                "Node name for S&R": "PreviewImage"
+            },
+            "widgets_values": []
+        },
+        {
             "id": 10,
             "type": "PreviewImage",
             "pos": [
-                1288.9661865234375,
-                -175.12034606933594
+                1395.756591796875,
+                -179.6309814453125
             ],
             "size": [
                 267.6073303222656,
@@ -314,42 +290,67 @@
             "widgets_values": []
         },
         {
-            "id": 11,
-            "type": "PreviewImage",
+            "id": 4,
+            "type": "DiffusersModelMakeup",
             "pos": [
-                1719.0726318359375,
-                -112.28995513916016
+                873.04052734375,
+                378.09552001953125
             ],
             "size": [
-                390.2191162109375,
-                614.5867919921875
+                315,
+                194
             ],
             "flags": {},
-            "order": 9,
+            "order": 6,
             "mode": 0,
             "inputs": [
                 {
-                    "name": "images",
-                    "type": "IMAGE",
-                    "link": 10
+                    "name": "pipeline",
+                    "type": "PIPELINE",
+                    "link": 2
+                },
+                {
+                    "name": "scheduler",
+                    "type": "SCHEDULER",
+                    "link": 3
+                },
+                {
+                    "name": "autoencoder",
+                    "type": "AUTOENCODER",
+                    "link": 4
                 }
             ],
-            "outputs": [],
+            "outputs": [
+                {
+                    "name": "PIPELINE",
+                    "type": "PIPELINE",
+                    "links": [
+                        11
+                    ],
+                    "slot_index": 0
+                }
+            ],
             "properties": {
-                "Node name for S&R": "PreviewImage"
+                "Node name for S&R": "DiffusersModelMakeup"
             },
-            "widgets_values": []
+            "widgets_values": [
+                true,
+                "huanngzh/mv-adapter",
+                "mvadapter_i2mv_sdxl.safetensors",
+                6,
+                true
+            ]
         },
         {
-            "id": 6,
-            "type": "DiffusersMVSampler",
+            "id": 12,
+            "type": "LoraModelLoader",
             "pos": [
-                1270.0447998046875,
-                187.63858032226562
+                1206.2666015625,
+                348.32861328125
             ],
             "size": [
-                398.4827880859375,
-                355.830078125
+                315,
+                82
             ],
             "flags": {},
             "order": 8,
@@ -358,7 +359,46 @@
                 {
                     "name": "pipeline",
                     "type": "PIPELINE",
-                    "link": 5
+                    "link": 11
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "PIPELINE",
+                    "type": "PIPELINE",
+                    "links": [
+                        12
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "Node name for S&R": "LoraModelLoader"
+            },
+            "widgets_values": [
+                "3d_render_style_xl.safetensors",
+                1
+            ]
+        },
+        {
+            "id": 6,
+            "type": "DiffusersMVSampler",
+            "pos": [
+                1545.4605712890625,
+                165.60733032226562
+            ],
+            "size": [
+                398.4827880859375,
+                355.830078125
+            ],
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "pipeline",
+                    "type": "PIPELINE",
+                    "link": 12
                 },
                 {
                     "name": "reference_image",
@@ -382,7 +422,7 @@
             },
             "widgets_values": [
                 6,
-                "A decorative figurine of a young anime-style girl",
+                "3d style, A decorative figurine of a young anime-style girl",
                 "watermark, ugly, deformed, noisy, blurry, low contrast",
                 768,
                 768,
@@ -427,14 +467,6 @@
             "AUTOENCODER"
         ],
         [
-            5,
-            4,
-            0,
-            6,
-            0,
-            "PIPELINE"
-        ],
-        [
             6,
             9,
             0,
@@ -473,16 +505,32 @@
             11,
             0,
             "IMAGE"
+        ],
+        [
+            11,
+            4,
+            0,
+            12,
+            0,
+            "PIPELINE"
+        ],
+        [
+            12,
+            12,
+            0,
+            6,
+            0,
+            "PIPELINE"
         ]
     ],
     "groups": [],
     "config": {},
     "extra": {
         "ds": {
-            "scale": 0.8264462809917354,
+            "scale": 0.620921323059155,
             "offset": [
-                5.887456621326669,
-                285.11670717918946
+                -328.02932510914184,
+                300.9334967924711
             ]
         }
     },

@@ -1,6 +1,7 @@
 # Adapted from https://github.com/Limitex/ComfyUI-Diffusers/blob/main/utils.py
 
 import io
+import os
 import torch
 import requests
 import numpy as np
@@ -33,6 +34,8 @@ from diffusers import (
 
 from .mvadapter.pipelines.pipeline_mvadapter_t2mv_sdxl import MVAdapterT2MVSDXLPipeline
 from .mvadapter.pipelines.pipeline_mvadapter_i2mv_sdxl import MVAdapterI2MVSDXLPipeline
+from .mvadapter.pipelines.pipeline_mvadapter_i2mv_sd import MVAdapterI2MVSDPipeline
+from .mvadapter.pipelines.pipeline_mvadapter_t2mv_sd import MVAdapterT2MVSDPipeline
 from .mvadapter.utils import (
     get_orthogonal_camera,
     get_plucker_embeds_from_cameras_ortho,
@@ -40,10 +43,14 @@ from .mvadapter.utils import (
 )
 
 
+NODE_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
+
 PIPELINES = {
     "StableDiffusionXLPipeline": StableDiffusionXLPipeline,
     "MVAdapterT2MVSDXLPipeline": MVAdapterT2MVSDXLPipeline,
     "MVAdapterI2MVSDXLPipeline": MVAdapterI2MVSDXLPipeline,
+    "MVAdapterI2MVSDPipeline": MVAdapterI2MVSDPipeline,
+    "MVAdapterT2MVSDPipeline": MVAdapterT2MVSDPipeline,
 }
 
 SCHEDULERS = {
@@ -64,6 +71,9 @@ SCHEDULERS = {
 MVADAPTERS = [
     "mvadapter_t2mv_sdxl.safetensors",
     "mvadapter_i2mv_sdxl.safetensors",
+    "mvadapter_i2mv_sdxl_beta.safetensors",
+    "mvadapter_t2mv_sd21.safetensors",
+    "mvadapter_i2mv_sd21.safetensors",
 ]
 
 
@@ -239,13 +249,20 @@ def custom_convert_ldm_vae_checkpoint(checkpoint, config):
 
 # Reference from : https://github.com/huggingface/diffusers/blob/main/scripts/convert_vae_pt_to_diffusers.py
 def vae_pt_to_vae_diffuser(checkpoint_path: str, force_upcast: bool = True):
-    # Only support V1
-    r = requests.get(
-        " https://raw.githubusercontent.com/CompVis/stable-diffusion/main/configs/stable-diffusion/v1-inference.yaml"
-    )
-    io_obj = io.BytesIO(r.content)
+    try:
+        config_path = os.path.join(
+            NODE_CACHE_PATH, "stable-diffusion-v1-inference.yaml"
+        )
+        original_config = OmegaConf.load(config_path)
+    except FileNotFoundError as e:
+        print(f"Warning: {e}")
 
-    original_config = OmegaConf.load(io_obj)
+        r = requests.get(
+            "https://raw.githubusercontent.com/CompVis/stable-diffusion/main/configs/stable-diffusion/v1-inference.yaml"
+        )
+        io_obj = io.BytesIO(r.content)
+        original_config = OmegaConf.load(io_obj)
+
     image_size = 512
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if checkpoint_path.endswith("safetensors"):
@@ -284,15 +301,15 @@ def resize_images(images: list[Image.Image], size: tuple[int, int]):
     return [image.resize(size) for image in images]
 
 
-def prepare_camera_embed(num_views, size, device):
+def prepare_camera_embed(num_views, size, device, azimuth_degrees=None):
     cameras = get_orthogonal_camera(
-        elevation_deg=[0, 0, 0, 0, 0, 0],
+        elevation_deg=[0] * num_views,
         distance=[1.8] * num_views,
         left=-0.55,
         right=0.55,
         bottom=-0.55,
         top=0.55,
-        azimuth_deg=[x - 90 for x in [0, 45, 90, 180, 270, 315]],
+        azimuth_deg=[x - 90 for x in azimuth_degrees],
         device=device,
     )
 

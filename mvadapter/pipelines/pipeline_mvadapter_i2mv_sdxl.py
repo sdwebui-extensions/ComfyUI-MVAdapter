@@ -877,7 +877,7 @@ class MVAdapterI2MVSDXLPipeline(StableDiffusionXLPipeline, CustomAdapterMixin):
     def _init_custom_adapter(
         self,
         # Multi-view adapter
-        num_views: int,
+        num_views: int = 1,
         self_attn_processor: Any = DecoupledMVRowSelfAttnProcessor2_0,
         # Condition encoder
         cond_in_channels: int = 6,
@@ -905,6 +905,14 @@ class MVAdapterI2MVSDXLPipeline(StableDiffusionXLPipeline, CustomAdapterMixin):
                 name=name,
                 use_mv=True,
                 use_ref=True,
+            ),
+            set_cross_attn_proc_func=lambda name, hs, cad, ap: self_attn_processor(
+                query_dim=hs,
+                inner_dim=hs,
+                num_views=num_views,
+                name=name,
+                use_mv=False,
+                use_ref=False,
             ),
         )
 

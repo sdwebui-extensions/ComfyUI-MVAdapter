@@ -2,11 +2,12 @@
 
 This extension integrates [MV-Adapter](https://github.com/huanngzh/MV-Adapter) into ComfyUI, allowing users to generate multi-view consistent images from text prompts or single images directly within the ComfyUI interface.
 
-## Features
+## 🔥 Feature Updates
 
-* Generate multi-view consistent images from text prompts
-* Generate multi-view consistent images from a single image
-* More features are coming...
+* [2025-01-15] Support selection of generated perspectives, such as generating only 2 views (front&back) [See [here](#view-selection)]
+* [2024-12-25] Support integration with ControlNet, for applications like scribble to multi-view images [See [here](#with-controlnet)]
+* [2024-12-09] Support integration with SDXL LoRA [See [here](#with-lora)]
+* [2024-12-02] Generate multi-view consistent images from text prompts or a single image
 
 ## Installation
 
@@ -43,14 +44,44 @@ However, since SDXL is used as the base model, it still requires about 13G to 14
 
 ### Text to Multi-view Images
 
+#### With SDXL or other base models
+
 ![comfyui_t2mv](assets/comfyui_t2mv.png)
 
 * `workflows/t2mv_sdxl_diffusers.json` for loading diffusers-format models
 * `workflows/t2mv_sdxl_ldm.json` for loading ldm-format models
 
+#### With LoRA
+
+![comfyui_t2mv_lora](assets/comfyui_t2mv_lora.png)
+
+`workflows/t2mv_sdxl_ldm_lora.json` for loading ldm-format models with LoRA for text-to-multi-view generation
+
+#### With ControlNet
+
+![comfyui_t2mv_controlnet](assets/comfyui_t2mv_controlnet.png)
+
+`workflows/t2mv_sdxl_ldm_controlnet.json` for loading diffusers-format controlnets for text-scribble-to-multi-view generation
+
 ### Image to Multi-view Images
+
+#### With SDXL or other base models
 
 ![comfyui_i2mv](assets/comfyui_i2mv.png)
 
 * `workflows/i2mv_sdxl_diffusers.json` for loading diffusers-format models
 * `workflows/i2mv_sdxl_ldm.json` for loading ldm-format models
+
+#### With LoRA
+
+![comfyui_i2mv_lora](assets/comfyui_i2mv_lora.png)
+
+`workflows/i2mv_sdxl_ldm_lora.json` for loading ldm-format models with LoRA for image-to-multi-view generation
+
+#### View Selection
+
+![comfyui_i2mv_pair_views](assets/comfyui_i2mv_view_selector.png)
+
+`workflows/i2mv_sdxl_ldm_view_selector.json` for loading ldm-format models and selecting specific views to generate
+
+The key is to replace the `adapter_name` in `Diffusers Model Makeup` with `mvadapter_i2mv_sdxl_beta.safetensors`, and add a `View Selector` node to choose which views you want to generate. After a rough test, the beta model is better at generating 2 views (front&back), 3 views (front&right&back), 4 views (front&right&back&left). Note that the attribute `num_views` is not used and can be ignored.
