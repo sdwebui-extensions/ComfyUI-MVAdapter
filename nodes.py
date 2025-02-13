@@ -24,7 +24,7 @@ from .mvadapter.pipelines.pipeline_mvadapter_t2mv_sdxl import MVAdapterT2MVSDXLP
 from .mvadapter.schedulers.scheduling_shift_snr import ShiftSNRScheduler
 
 
-class DiffusersPipelineLoader:
+class DiffusersMVPipelineLoader:
     def __init__(self):
         self.hf_dir = folder_paths.get_folder_paths("diffusers")[0]
         self.dtype = torch.float16
@@ -105,7 +105,7 @@ class LdmPipelineLoader:
         return (pipe, pipe.vae, pipe.scheduler)
 
 
-class DiffusersVaeLoader:
+class DiffusersMVVaeLoader:
     def __init__(self):
         self.hf_dir = folder_paths.get_folder_paths("diffusers")[0]
         self.dtype = torch.float16
@@ -164,7 +164,7 @@ class LdmVaeLoader:
         return (vae,)
 
 
-class DiffusersSchedulerLoader:
+class DiffusersMVSchedulerLoader:
     def __init__(self):
         self.hf_dir = folder_paths.get_folder_paths("diffusers")[0]
         self.dtype = torch.float16
@@ -303,7 +303,7 @@ class ControlNetModelLoader:
         return (pipeline,)
 
 
-class DiffusersModelMakeup:
+class DiffusersMVModelMakeup:
     def __init__(self):
         self.hf_dir = folder_paths.get_folder_paths("diffusers")[0]
         self.torch_device = get_torch_device()
@@ -716,12 +716,11 @@ class ViewSelector:
 NODE_CLASS_MAPPINGS = {
     "LdmPipelineLoader": LdmPipelineLoader,
     "LdmVaeLoader": LdmVaeLoader,
-    "DiffusersPipelineLoader": DiffusersPipelineLoader,
-    "DiffusersVaeLoader": DiffusersVaeLoader,
-    "DiffusersSchedulerLoader": DiffusersSchedulerLoader,
-    "DiffusersModelMakeup": DiffusersModelMakeup,
+    "DiffusersMVPipelineLoader": DiffusersMVPipelineLoader,
+    "DiffusersMVVaeLoader": DiffusersMVVaeLoader,
+    "DiffusersMVSchedulerLoader": DiffusersMVSchedulerLoader,
+    "DiffusersMVModelMakeup": DiffusersMVModelMakeup,
     "LoraModelLoader": LoraModelLoader,
-    "DiffusersSampler": DiffusersSampler,
     "DiffusersMVSampler": DiffusersMVSampler,
     "BiRefNet": BiRefNet,
     "ImagePreprocessor": ImagePreprocessor,
@@ -733,12 +732,11 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LdmPipelineLoader": "LDM Pipeline Loader",
     "LdmVaeLoader": "LDM Vae Loader",
-    "DiffusersPipelineLoader": "Diffusers Pipeline Loader",
-    "DiffusersVaeLoader": "Diffusers Vae Loader",
-    "DiffusersSchedulerLoader": "Diffusers Scheduler Loader",
-    "DiffusersModelMakeup": "Diffusers Model Makeup",
+    "DiffusersMVPipelineLoader": "Diffusers Pipeline Loader",
+    "DiffusersMVVaeLoader": "Diffusers Vae Loader",
+    "DiffusersMVSchedulerLoader": "Diffusers Scheduler Loader",
+    "DiffusersMVModelMakeup": "Diffusers Model Makeup",
     "LoraModelLoader": "Lora Model Loader",
-    "DiffusersSampler": "Diffusers Sampler",
     "DiffusersMVSampler": "Diffusers MV Sampler",
     "BiRefNet": "BiRefNet",
     "ImagePreprocessor": "Image Preprocessor",

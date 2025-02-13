@@ -4,7 +4,7 @@
     "nodes": [
         {
             "id": 6,
-            "type": "DiffusersModelMakeup",
+            "type": "DiffusersMVModelMakeup",
             "pos": [
                 944.978759765625,
                 234.29940795898438
@@ -44,7 +44,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersModelMakeup"
+                "Node name for S&R": "DiffusersMVModelMakeup"
             },
             "widgets_values": [
                 true,
@@ -55,7 +55,7 @@
         },
         {
             "id": 5,
-            "type": "DiffusersVaeLoader",
+            "type": "DiffusersMVVaeLoader",
             "pos": [
                 519.3989868164062,
                 334.48828125
@@ -79,7 +79,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersVaeLoader"
+                "Node name for S&R": "DiffusersMVVaeLoader"
             },
             "widgets_values": [
                 "madebyollin/sdxl-vae-fp16-fix"
@@ -87,7 +87,7 @@
         },
         {
             "id": 3,
-            "type": "DiffusersSchedulerLoader",
+            "type": "DiffusersMVSchedulerLoader",
             "pos": [
                 515.5944213867188,
                 125.65931701660156
@@ -117,7 +117,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersSchedulerLoader"
+                "Node name for S&R": "DiffusersMVSchedulerLoader"
             },
             "widgets_values": [
                 "DDPM",
@@ -349,7 +349,7 @@
         },
         {
             "id": 1,
-            "type": "DiffusersPipelineLoader",
+            "type": "DiffusersMVPipelineLoader",
             "pos": [
                 519.635498046875,
                 -73.85352325439453
@@ -384,7 +384,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersPipelineLoader"
+                "Node name for S&R": "DiffusersMVPipelineLoader"
             },
             "widgets_values": [
                 "stabilityai/stable-diffusion-xl-base-1.0",
