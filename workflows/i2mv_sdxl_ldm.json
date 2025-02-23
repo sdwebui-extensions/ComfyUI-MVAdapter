@@ -37,7 +37,7 @@
         },
         {
             "id": 4,
-            "type": "DiffusersModelMakeup",
+            "type": "DiffusersMVModelMakeup",
             "pos": [
                 873.04052734375,
                 378.09552001953125
@@ -77,7 +77,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersModelMakeup"
+                "Node name for S&R": "DiffusersMVModelMakeup"
             },
             "widgets_values": [
                 true,
@@ -132,7 +132,7 @@
         },
         {
             "id": 2,
-            "type": "DiffusersSchedulerLoader",
+            "type": "DiffusersMVSchedulerLoader",
             "pos": [
                 452.2912292480469,
                 260.1961975097656
@@ -162,7 +162,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersSchedulerLoader"
+                "Node name for S&R": "DiffusersMVSchedulerLoader"
             },
             "widgets_values": [
                 "DDPM",

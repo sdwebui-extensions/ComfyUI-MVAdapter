@@ -4,7 +4,7 @@
     "nodes": [
         {
             "id": 1,
-            "type": "DiffusersPipelineLoader",
+            "type": "DiffusersMVPipelineLoader",
             "pos": [
                 324.3054504394531,
                 130.34339904785156
@@ -39,7 +39,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersPipelineLoader"
+                "Node name for S&R": "DiffusersMVPipelineLoader"
             },
             "widgets_values": [
                 "stabilityai/stable-diffusion-xl-base-1.0",
@@ -48,7 +48,7 @@
         },
         {
             "id": 3,
-            "type": "DiffusersSchedulerLoader",
+            "type": "DiffusersMVSchedulerLoader",
             "pos": [
                 320.6045227050781,
                 323.5510559082031
@@ -78,7 +78,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersSchedulerLoader"
+                "Node name for S&R": "DiffusersMVSchedulerLoader"
             },
             "widgets_values": [
                 "DDPM",
@@ -89,7 +89,7 @@
         },
         {
             "id": 2,
-            "type": "DiffusersVaeLoader",
+            "type": "DiffusersMVVaeLoader",
             "pos": [
                 328.6159362792969,
                 541.3416748046875
@@ -113,7 +113,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersVaeLoader"
+                "Node name for S&R": "DiffusersMVVaeLoader"
             },
             "widgets_values": [
                 "madebyollin/sdxl-vae-fp16-fix"
@@ -121,7 +121,7 @@
         },
         {
             "id": 4,
-            "type": "DiffusersModelMakeup",
+            "type": "DiffusersMVModelMakeup",
             "pos": [
                 728.7667846679688,
                 261.0943298339844
@@ -161,7 +161,7 @@
                 }
             ],
             "properties": {
-                "Node name for S&R": "DiffusersModelMakeup"
+                "Node name for S&R": "DiffusersMVModelMakeup"
             },
             "widgets_values": [
                 true,
